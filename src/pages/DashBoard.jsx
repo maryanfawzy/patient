@@ -1,9 +1,24 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import PatientProfile from '../components/PatientProfile';
 import BloodPressureChart from '../components/BloodPressureChart';
-
+import { fetchJessicaData } from '../api/Patients'
 
 const Dashboard = () => {
+  const [jessica, setJessica] = useState(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchJessicaData();
+      setJessica(data);
+    };
+    getData();
+  }, []);
+
+  if (!jessica) {
+    return <div className="p-10 text-center">Loading Jessica's data...</div>;
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50 text-gray-800">
       {/* Sidebar */}
@@ -24,7 +39,7 @@ const Dashboard = () => {
           <h2 className="text-2xl font-semibold">HealthCare Dashboard</h2>
           <div className="flex items-center space-x-4">
             <span className="font-medium">Dr. Jose Simmons</span>
-            {/* <img src={} alt="Doctor" className="w-10 h-10 rounded-full" /> */}
+            <img src={jessica.image} alt="Doctor" className="w-10 h-10 rounded-full" />
           </div>
         </div>
 
@@ -35,15 +50,15 @@ const Dashboard = () => {
             <BloodPressureChart />
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white p-4 rounded shadow text-center">
-                <p className="text-2xl font-bold">20 bpm</p>
+                <p className="text-2xl font-bold">{jessica?.vitals?.respiratoryRate} bpm</p>
                 <p className="text-sm text-gray-500">Respiratory Rate</p>
               </div>
               <div className="bg-white p-4 rounded shadow text-center">
-                <p className="text-2xl font-bold">98.6°F</p>
+                <p className="text-2xl font-bold">{jessica?.vitals?.temperature}°F</p>
                 <p className="text-sm text-gray-500">Temperature</p>
               </div>
               <div className="bg-white p-4 rounded shadow text-center">
-                <p className="text-2xl font-bold">78 bpm</p>
+                <p className="text-2xl font-bold">{jessica?.vitals?.heartRate} bpm</p>
                 <p className="text-sm text-gray-500">Heart Rate</p>
               </div>
             </div>
@@ -58,11 +73,13 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="py-2">Hypertension</td>
-                    <td className="py-2">Chronic high blood pressure</td>
-                    <td className="py-2">Under Observation</td>
-                  </tr>
+                  {jessica?.diagnosis?.map((item, index) => (
+                    <tr key={index}>
+                      <td className="py-2">{item.problem}</td>
+                      <td className="py-2">{item.description}</td>
+                      <td className="py-2">{item.status}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -70,7 +87,7 @@ const Dashboard = () => {
 
           {/* Right: Profile and Lab */}
           <div className="space-y-4">
-            <PatientProfile />
+            <PatientProfile data={jessica} />
             <div className="bg-white p-4 rounded-lg shadow-md">
               <h3 className="text-lg font-semibold mb-2">Lab Results</h3>
               <ul className="text-sm space-y-2">

@@ -50,7 +50,7 @@ const BloodPressureChart = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'top' as const,
+        position: 'top' ,
       },
       title: {
         display: false,
