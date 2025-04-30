@@ -22,13 +22,18 @@ ChartJS.register(
   Legend
 );
 
-const BloodPressureChart = () => {
+const BloodPressureChart = ({ diagnosisHistory }) => {
+  // Created labels and values from diagnosis history
+  const labels = diagnosisHistory.map((entry) => `${entry.month} ${entry.year}`);
+  const systolicValues = diagnosisHistory.map((entry) => entry.blood_pressure.systolic.value);
+  const diastolicValues = diagnosisHistory.map((entry) => entry.blood_pressure.diastolic.value);
+
   const data = {
-    labels: ['Oct 2023', 'Nov 2023', 'Dec 2023', 'Jan 2024', 'Feb 2024', 'Mar 2024'],
+    labels,
     datasets: [
       {
         label: 'Systolic',
-        data: [145, 160, 155, 140, 158, 160],
+        data: systolicValues,
         borderColor: '#C084FC',
         backgroundColor: '#C084FC',
         tension: 0.4,
@@ -36,7 +41,7 @@ const BloodPressureChart = () => {
       },
       {
         label: 'Diastolic',
-        data: [70, 78, 74, 72, 75, 78],
+        data: diastolicValues,
         borderColor: '#93C5FD',
         backgroundColor: '#93C5FD',
         tension: 0.4,
@@ -50,7 +55,7 @@ const BloodPressureChart = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'top' ,
+        position: 'top',
       },
       title: {
         display: false,
@@ -69,7 +74,9 @@ const BloodPressureChart = () => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold mb-2">Blood Pressure <span className="text-gray-500">(Last 6 months)</span></h2>
+      <h2 className="text-lg font-semibold mb-2">
+        Blood Pressure <span className="text-gray-500">(Last 6 months)</span>
+      </h2>
       <Line data={data} options={options} />
     </div>
   );
