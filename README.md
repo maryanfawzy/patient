@@ -14,7 +14,7 @@
  API integration
  All image assets used in the design
 
- 🙏 Thank You!
+ 🙏 Thank You!!
 
 Thank you for reviewing my submission. I look forward to the opportunity to work with you!!
 
